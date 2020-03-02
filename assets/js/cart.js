@@ -18,7 +18,6 @@ document.getElementById("increaseQuantityP1").addEventListener("click", () => {
     updatePriceByQuantity("currentQuantityP1", 1219, "productPrice1");
     updateTaxAndTotal("subtotal", "total", "tax");
 });
-
 document.getElementById("increaseQuantityP2").addEventListener("click", () => {
     increaseQntNumber("currentQuantityP2");
     updatePriceByQuantity("currentQuantityP2", 59, "productPrice2");
@@ -31,11 +30,45 @@ document.getElementById("decreaseQuantityP1").addEventListener("click", () => {
     updatePriceByQuantity("currentQuantityP1", 1219, "productPrice1");
     updateTaxAndTotal("subtotal", "total", "tax");
 });
-
 document.getElementById("decreaseQuantityP2").addEventListener("click", () => {
     decreaseQntNumber("currentQuantityP2");
     updatePriceByQuantity("currentQuantityP2", 59, "productPrice2");
     updateTaxAndTotal("subtotal", "total", "tax");
+});
+
+// Cart Item remove operation for cart item one
+document.getElementById("removeItemOne").addEventListener("click", () => {
+
+    afterRemovingCartItem("cartItemOne", "productPrice1", "subtotal", "tax", "total" );
+
+    document.getElementById("increaseQuantityP2").addEventListener("click", () => {
+        updateSubtotalAfterRemove("productPrice2", "subtotal");
+        updateTaxAndTotal("subtotal", "total", "tax");
+    });
+
+    document.getElementById("decreaseQuantityP2").addEventListener("click", () => {
+        updateSubtotalAfterRemove("productPrice2", "subtotal");
+        updateTaxAndTotal("subtotal", "total", "tax");
+    });
+    
+
+});
+
+// Cart Item remove operation for cart item two
+document.getElementById("removeItemTwo").addEventListener("click", () => {
+    
+    afterRemovingCartItem("cartItemTwo", "productPrice2", "subtotal", "tax", "total" );
+    
+    document.getElementById("increaseQuantityP1").addEventListener("click", () => {
+        updateSubtotalAfterRemove("productPrice1", "subtotal");
+        updateTaxAndTotal("subtotal", "total", "tax");
+    });
+
+    document.getElementById("decreaseQuantityP1").addEventListener("click", () => {
+        updateSubtotalAfterRemove("productPrice1", "subtotal");
+        updateTaxAndTotal("subtotal", "total", "tax");
+    });
+
 });
 
 // Function to increase number of quantity of the product of the cart
@@ -70,6 +103,12 @@ function updateSubtotal(priceInnerTextID1, priceInnerTextID2, subtotalInnerText)
     document.getElementById(subtotalInnerText).innerText = parseFloat(currentPrice1) + parseFloat(currentPrice2);
 }
 
+// // After removing item from the cart - Function to update the subtotal depending on the current price
+function updateSubtotalAfterRemove(priceInnerTextID, subtotalInnerTextID){
+    const currentSubtotal = parseFloat(document.getElementById(priceInnerTextID).innerText);
+    document.getElementById(subtotalInnerTextID).innerText = currentSubtotal;
+}
+
 // Function to update the tax and also to update the total depending on the current price - with tax calculation (2%) of total purchased price.
 function updateTaxAndTotal(subtotalInnerTextID, totalInnerTextID, taxinnerTextID) {
     const currentSubtotal = parseFloat(document.getElementById(subtotalInnerTextID).innerText);
@@ -77,4 +116,16 @@ function updateTaxAndTotal(subtotalInnerTextID, totalInnerTextID, taxinnerTextID
     const total = parseFloat(currentSubtotal) + parseFloat(tax);
     document.getElementById(taxinnerTextID).innerText = tax;
     document.getElementById(totalInnerTextID).innerText = total;
+}
+
+// After removing cart item - operations
+function afterRemovingCartItem(cartItemID, priceInnertTextID, subtotalInnerTextID, taxInnerTextID, totalInnerTextID){
+    document.getElementById(cartItemID).style.display = "none";
+    const productPrice1 = parseFloat(document.getElementById(priceInnertTextID).innerText);
+    const currentSubtotal = parseFloat(document.getElementById(subtotalInnerTextID).innerText);
+    const afterRemoveSubtotal = currentSubtotal - productPrice1;
+    document.getElementById(subtotalInnerTextID).innerText = afterRemoveSubtotal;
+    const afterRemoveTax = parseFloat(afterRemoveSubtotal * 2 / 100);
+    document.getElementById(taxInnerTextID).innerText = afterRemoveTax;
+    document.getElementById(totalInnerTextID).innerText = afterRemoveSubtotal + afterRemoveTax;
 }
